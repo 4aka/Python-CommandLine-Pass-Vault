@@ -1,5 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+vault.db
+vault.pswd
+vault_db.pswd
 *.py[cod]
 *$py.class
 
