@@ -15,14 +15,6 @@ def login():
         new_user_scenario()
 
 
-def get_bool(prompt):
-    while True:
-        try:
-            return {"y": True, "n": False}[input(prompt).lower()]
-        except KeyError:
-            print("Invalid input please enter True or False!")
-
-
 def new_user_scenario():
     new_password = input('New password: ')
     assert_password = input('New password again: ')
@@ -44,15 +36,6 @@ def existed_user_scenario():
         password = input('Password: ')
 
 
-def copy_to_clipboard(data):
-    pyperclip.copy(data)
-
-
-def decrypt_password(encrypted_password):
-    f = Fernet(read_db_password())
-    return f.decrypt(encrypted_password).decode()
-
-
 def create_vault():
     conn = sqlite3.connect(vault_file)
     cursor = conn.cursor()
@@ -61,13 +44,25 @@ def create_vault():
     conn.close()
 
 
+def decrypt(encrypted_password):
+    key = read_db_password()
+    f = Fernet(key)
+    return f.decrypt(encrypted_password).decode()
+
+
 def encrypt(data):
     key = read_db_password()
     f = Fernet(key)
     return f.encrypt(data)
 
 
-def decrypt(data):
-    key = read_db_password()
-    f = Fernet(key)
-    return f.decrypt(data)
+def get_bool(prompt):
+    while True:
+        try:
+            return {"y": True, "n": False}[input(prompt).lower()]
+        except KeyError:
+            print("Invalid input please enter True or False!")
+
+
+def copy_to_clipboard(data):
+    pyperclip.copy(data)
