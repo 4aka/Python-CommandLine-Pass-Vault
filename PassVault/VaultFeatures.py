@@ -1,7 +1,6 @@
 import sqlite3
-
-from PassVault.Variables import vault_file, create_entry_sql, search_sql, show_favorites_sql
-from PassVault.Vault import decrypt_password, copy_to_clipboard, get_bool, encrypt
+from Variables import vault_file, create_entry_sql, search_sql, show_favorites_sql
+from Vault import decrypt_password, copy_to_clipboard, get_bool, encrypt
 
 
 def search():
