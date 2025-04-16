@@ -1,4 +1,5 @@
-import Vault as vault
+from VaultFeatures import search, create_entry, show_favorite, edit_entry
+from Vault import login
 import sys
 
 
@@ -16,20 +17,20 @@ def show_menu():
     ''')
     match action:
         case "s":
-            vault.search()
+            search()
         case "c":
-            vault.create_entry()
+            create_entry()
         case "f":
-            vault.show_favorite()
+            show_favorite()
         case "e":
-            vault.edit_entry()
+            edit_entry()
         case "z":
             sys.exit()
 
 
 def main():
     show_wellcome()
-    vault.login()
+    login()
     show_menu()
 
 
