@@ -3,6 +3,7 @@ __pycache__/
 vault.db
 vault.pswd
 vault_db.pswd
+.idea
 *.py[cod]
 *$py.class
 
