@@ -2,7 +2,6 @@ from cryptography.fernet import Fernet
 
 from HashData import hash_data
 from Variables import passowrd_file, passowrd_db_file
-from GeneratePassword import generate_new_password
 import base64
 
 
@@ -36,10 +35,6 @@ def compare_password_with_existed(password):
 
 def compare_passwords(password_1, password_2):
     return password_1 == password_2
-
-
-def generate_password():
-    return generate_new_password()
 
 
 def read_password():
