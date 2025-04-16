@@ -34,6 +34,8 @@ def existed_user_scenario():
     while not compare_password_with_existed(hash_data(password)):
         print('Wrong password! Try again')
         password = input('Password: ')
+    # TODO check DB password
+    # TODO check vault
 
 
 def create_vault():
