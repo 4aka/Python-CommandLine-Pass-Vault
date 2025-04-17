@@ -1,6 +1,6 @@
 from Assertions import is_password_file_exists
 from PasswordActions import (compare_passwords, compare_password_with_existed,
-                             create_password, read_db_password, create_db_password)
+                             create_password, read_db_password, create_db_password, input_password)
 from cryptography.fernet import Fernet
 from Variables import vault_file, create_table_sql
 from HashData import hash_data
@@ -16,12 +16,12 @@ def login():
 
 
 def new_user_scenario():
-    new_password = input('New password: ')
-    assert_password = input('New password again: ')
+    new_password = input_password('New password: ')
+    assert_password = input_password('New password again: ')
     while not compare_passwords(new_password, assert_password):
         print('Passwords do not match! Try again')
-        new_password = input('New password: ')
-        assert_password = input('New password again: ')
+        new_password = input_password('New password: ')
+        assert_password = input_password('New password again: ')
 
     create_password(new_password)
     create_db_password()
