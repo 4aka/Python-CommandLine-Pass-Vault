@@ -1,2 +1,7 @@
 cryptography
 pyperclip
+pyperclip
+sqlite3
+hashlib
+random
+os
