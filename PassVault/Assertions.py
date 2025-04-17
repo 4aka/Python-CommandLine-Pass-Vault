@@ -1,5 +1,4 @@
-from Variables import passowrd_file
-from Variables import vault_file_path
+from Variables import passowrd_file, vault_file_path, passowrd_db_file
 
 
 def is_password_file_exists():
@@ -7,7 +6,15 @@ def is_password_file_exists():
         if open(passowrd_file, "r").readable():
             return True
     except FileNotFoundError as e:
-        print('There is no any created vaults. Create vault')
+        print('There is no password')
+
+
+def is_db_password_file_exists():
+    try:
+        if open(passowrd_db_file, "r").readable():
+            return True
+    except FileNotFoundError as e:
+        print('There is no password')
 
 
 def is_vault_file_exists():
