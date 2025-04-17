@@ -42,3 +42,8 @@ def read_password():
     password = f.read()
     f.close()
     return password
+
+
+def input_password(input_text):
+    return input(input_text)
+
