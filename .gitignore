@@ -4,6 +4,7 @@ vault.db
 vault.pswd
 vault_db.pswd
 .idea
+.idea/
 *.py[cod]
 *$py.class
 
