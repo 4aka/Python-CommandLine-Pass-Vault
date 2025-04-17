@@ -22,7 +22,12 @@ from GeneratePassword import generate_password
 '''
 
 
-def show_wellcome():
+def main():
+    login()
+    menu()
+
+
+def menu():
     print('''Wellcome to your VAULT!''')
     action = None
 
@@ -45,11 +50,6 @@ def show_wellcome():
                 edit_entry()
         if action == "z":
             sys.exit()
-
-
-def main():
-    login()
-    show_wellcome()
 
 
 # Run main
