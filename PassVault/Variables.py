@@ -1,9 +1,11 @@
 import os
 
-create_entry_sql = 'INSERT INTO vault (site, username, password, is_faforite) VALUES (?, ?, ?, ?)'
-search_sql = 'SELECT password FROM vault WHERE site LIKE \'%?%\''
-create_table_sql = 'CREATE TABLE IF NOT EXISTS vault (site TEXT, username TEXT, password BLOB, is_faforite BOOLEAN)'
-show_favorites_sql = 'SELECT is_faforite FROM vault WHERE is_faforite = True'
+create_entry_sql = 'INSERT INTO vault (site, username, password, is_favorite) VALUES (?, ?, ?, ?)'
+search_sql = 'SELECT password FROM vault WHERE site LIKE ?'
+create_table_sql = 'CREATE TABLE IF NOT EXISTS vault (site TEXT, username BLOB, password BLOB, is_favorite BOOLEAN)'
+show_favorites_sql = 'SELECT site FROM vault WHERE is_favorite = True'
+select_username = 'SELECT username FROM vault WHERE site LIKE ?'
+select_is_favorite = 'SELECT is_favorite FROM vault WHERE site LIKE ?'
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 passowrd_file = ROOT_DIR + '\\vault.pswd'
