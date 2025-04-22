@@ -16,14 +16,15 @@ def login():
 
 
 def new_user_scenario():
-    new_password = input_password('New password: ')
+    password = input_password('New password: ')
     assert_password = input_password('New password again: ')
-    while not compare_passwords(new_password, assert_password):
+    while not compare_passwords(password, assert_password):
         print('Passwords do not match! Try again')
-        new_password = input_password('New password: ')
+        password = input_password('New password: ')
         assert_password = input_password('New password again: ')
 
-    create_password(new_password)
+    # TODO check input for cirylyc
+    create_password(password)
     create_db_password()
     create_vault()
 
