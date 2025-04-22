@@ -13,9 +13,12 @@ def search():
     entry = cursor.fetchone()
     conn.close()
     if entry:
+        # TODO Add data(salt)
         result = decrypt(entry[0])
-    copy_to_clipboard(result)
-    print("Password copied to clipboard")
+        copy_to_clipboard(result)
+        print("Password copied to clipboard")
+    else:
+        print("Nothing found")
 
 
 def create_entry():
@@ -25,11 +28,14 @@ def create_entry():
     print('Generated password: ' + password)
     is_favorite = get_bool('Favorite? y/n: ')
 
-    conn = sqlite3.connect(vault_file)
-    cursor = conn.cursor()
     encrypted_password = encrypt(password.encode())
     encrypted_username = encrypt(username)
-    cursor.execute(create_entry_sql, (site, encrypted_username, encrypted_password, is_favorite))
+    # TODO Add data(salt)
+    date = encrypt(b'my_salt')
+
+    conn = sqlite3.connect(vault_file)
+    cursor = conn.cursor()
+    cursor.execute(create_entry_sql, (site, date, encrypted_username, encrypted_password, is_favorite))
     conn.commit()
     conn.close()
 
@@ -53,20 +59,25 @@ def edit_entry():
     cursor.execute(search_sql, ('%' + site + '%',))
     conn.commit()
 
+    # TODO Add data(salt)
     # Edit username
     result_username = input('Edit username? Enter - no/ new username: ')
     if result_username != "":
         username = encrypt(result_username.encode()).decode()
-        cursor.execute('UPDATE vault SET username = \'' + username + '\' WHERE vault.site LIKE ?', ('%' + site + '%',))
+        cursor.execute('UPDATE vault SET username = \'' + username +
+                       '\' WHERE vault.site LIKE ?', ('%' + site + '%',))
         conn.commit()
 
+    # TODO Add data(salt)
     # Edit password
     result_password = input('Edit password? Enter - no/ new password: ')
     if result_password != "":
         password = encrypt(result_password.encode()).decode()
-        cursor.execute('UPDATE vault SET password = \'' + password + '\' WHERE vault.site LIKE ?', ('%' + site + '%',))
+        cursor.execute('UPDATE vault SET password = \'' + password +
+                       '\' WHERE vault.site LIKE ?', ('%' + site + '%',))
         conn.commit()
 
+    # TODO Add data(salt)
     # Edit is_favorite
     result_is_favorite = input('Add to favorites? Enter - no/ add - y: ')
     if result_is_favorite == "y":
