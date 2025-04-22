@@ -1,4 +1,5 @@
 cryptography
+PBKDF2HMAC
 pyperclip
 pyperclip
 sqlite3
