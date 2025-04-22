@@ -1,8 +1,8 @@
 import os
 
-create_entry_sql = 'INSERT INTO vault (site, username, password, is_favorite) VALUES (?, ?, ?, ?)'
+create_entry_sql = 'INSERT INTO vault (site, date, username, password, is_favorite) VALUES (?, ?, ?, ?, ?)'
 search_sql = 'SELECT password FROM vault WHERE site LIKE ?'
-create_table_sql = 'CREATE TABLE IF NOT EXISTS vault (site TEXT, username BLOB, password BLOB, is_favorite BOOLEAN)'
+create_table_sql = 'CREATE TABLE IF NOT EXISTS vault (site TEXT, date BLOB, username BLOB, password BLOB, is_favorite BOOLEAN)'
 show_favorites_sql = 'SELECT site FROM vault WHERE is_favorite = True'
 select_username = 'SELECT username FROM vault WHERE site LIKE ?'
 select_is_favorite = 'SELECT is_favorite FROM vault WHERE site LIKE ?'
