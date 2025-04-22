@@ -1,8 +1,9 @@
+import base64
+
 from cryptography.fernet import Fernet
 
 from HashData import hash_data
 from Variables import passowrd_file, passowrd_db_file
-import base64
 
 
 def create_password(password):
@@ -39,6 +40,13 @@ def compare_passwords(password_1, password_2):
 
 def read_password():
     f = open(passowrd_file, "r")
+    password = f.read()
+    f.close()
+    return password
+
+
+def read_password_bytes():
+    f = open(passowrd_file, "rb")
     password = f.read()
     f.close()
     return password
