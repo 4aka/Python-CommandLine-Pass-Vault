@@ -1,4 +1,4 @@
-from VaultFeatures import search, create_entry, show_favorite, edit_entry
+from VaultFeatures import search, create_entry, show_favorite, edit_entry, delete_entry
 from Vault import login
 import sys
 from GeneratePassword import generate_password
@@ -38,6 +38,7 @@ def menu():
         f - favorites
         e - edit
         z - exit
+        d - delete
         ''')
         match action:
             case "s":
@@ -48,6 +49,8 @@ def menu():
                 show_favorite()
             case "e":
                 edit_entry()
+            case "d":
+                delete_entry()
         if action == "z":
             sys.exit()
 
