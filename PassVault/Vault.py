@@ -1,7 +1,6 @@
 from Assertions import is_password_file_exists
-from PasswordActions import (compare_passwords, compare_password_with_existed,
-                             create_password, read_db_password, create_db_password, input_password)
-from cryptography.fernet import Fernet
+from PasswordActions import (compare_password_with_existed, create_password, input_data)
+from Assertions import passwords_equels
 from Variables import vault_file, create_table_sql
 from HashData import hash_data
 import sqlite3
@@ -16,16 +15,15 @@ def login():
 
 
 def new_user_scenario():
-    password = input_password('New password: ')
-    assert_password = input_password('New password again: ')
-    while not compare_passwords(password, assert_password):
+    password = input_data('New password: ')
+    assert_password = input_data('New password again: ')
+    while not passwords_equels(password, assert_password):
         print('Passwords do not match! Try again')
-        password = input_password('New password: ')
-        assert_password = input_password('New password again: ')
+        password = input_data('New password: ')
+        assert_password = input_data('New password again: ')
 
     # TODO check input for cirylyc
     create_password(password)
-    create_db_password()
     create_vault()
 
 
@@ -35,7 +33,6 @@ def existed_user_scenario():
     while not compare_password_with_existed(hash_data(password)):
         print('Wrong password! Try again')
         password = input('Password: ')
-    # TODO check DB password
     # TODO check vault
 
 
@@ -47,24 +44,12 @@ def create_vault():
     conn.close()
 
 
-def decrypt(encrypted_password):
-    key = read_db_password()
-    f = Fernet(key)
-    return f.decrypt(encrypted_password).decode()
-
-
-def encrypt(data):
-    key = read_db_password()
-    f = Fernet(key)
-    return f.encrypt(data)
-
-
 def get_bool(prompt):
     while True:
         try:
             return {"y": True, "n": False}[input(prompt).lower()]
         except KeyError:
-            print("Invalid input please enter True or False!")
+            print("Invalid input please enter y or n!")
 
 
 def copy_to_clipboard(data):
