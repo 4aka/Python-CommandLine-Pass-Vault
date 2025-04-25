@@ -1,12 +1,17 @@
 import sqlite3
-from Assertions import get_unique_site_name
-from Variables import (vault_file, show_favorites_sql, create_entry_sql, search_site, select_is_favorite, delete_row)
-from Vault import copy_to_clipboard, get_bool
+import sys
+
+from Assertions import is_site_name_unique, get_user_name, is_vault_empty
+from Variables import (vault_file, show_favorites_sql, create_entry_sql, search_site, select_is_favorite, delete_row, update_favorites)
+from Tools import get_bool, copy_to_clipboard
 from GeneratePassword import generate_password
 from Security import encryptV2, decryptV2, get_date
 
 
 def search():
+    if is_vault_empty():
+        return
+
     # Get site name
     site = input('Search site: ')
     conn = sqlite3.connect(vault_file)
@@ -19,59 +24,67 @@ def search():
 
     # Decrypt
     if entry:
-        result = decryptV2(get_date(site), entry[3])  # [3] - pass
-        copy_to_clipboard(result)
-        print("Password copied to clipboard")
+        usrnm = decryptV2(get_date(site), entry[2]).decode()  # [2] - usrnm
+        pswd = decryptV2(get_date(site), entry[3])  # [3] - pswd
+        copy_to_clipboard(pswd)
+        print('Username: ' + usrnm)
+        print("### Password copied to clipboard")
     else:
-        print("Nothing found")
+        print("There is no such site")
 
 
 def create_entry():
-    # Prepare data
-    site = get_unique_site_name()
-    username = input('Username: ')
-    password = None
+    # Collect data
+    site = is_site_name_unique()
+    username = get_user_name()
     is_favorite = get_bool('Add to favorite? y/n: ')
 
-    gen_pass = get_bool('Generate password? y/n: ')
-    if gen_pass:
+    if get_bool('Generate password? y/n: '):
         password = generate_password(20)
-        print_pass = get_bool('Show password? y/n: ')
-        if print_pass:
-            print(f'Password: ' + password)
     else:
         password = input('Create your password: ')
 
     # Encryption
     (filed_username, field_password, date) = encryptV2(username, password)
 
-    # Execute query
+    # Add to db
     conn = sqlite3.connect(vault_file)
     cursor = conn.cursor()
-    cursor.execute(create_entry_sql, (site, date, filed_username, field_password, is_favorite))
-    conn.commit()
+    cursor.execute(create_entry_sql, (site, date, filed_username,
+                                      field_password, is_favorite))
     conn.close()
 
 
 def show_favorite():
+    if is_vault_empty():
+        return
+
     conn = sqlite3.connect(vault_file)
     cursor = conn.cursor()
     cursor.execute(show_favorites_sql)
     entry = cursor.fetchall()
-    print(entry)
-    conn.commit()
     conn.close()
-    print()
-    search()
+
+    if len(entry) > 0:
+        for i in entry:
+            print(i[0])
+    else:
+        print('Favorites is empty')
+        return
 
 
 def edit_entry():
-    site = input('Search url to edit entry: ')
+    if is_vault_empty():
+        return
+
     conn = sqlite3.connect(vault_file)
     cursor = conn.cursor()
-    cursor.execute(search_site, (site,))
-    conn.commit()
-    entry = cursor.fetchone()
+
+    site = input('Search site to edit entry: ')
+    entry = cursor.execute(search_site, (site,)).fetchone()
+    while entry is None:
+        site = input('There is no such site, try again: ')
+        entry = cursor.execute(search_site, (site,)).fetchone()
 
     # Collect data
     username = decryptV2(get_date(site), entry[2]).decode()
@@ -79,31 +92,50 @@ def edit_entry():
     cursor.execute(select_is_favorite, (site,))
     is_favorite = cursor.fetchone()[0]
 
-    # Edit password
-    result_is_password = input('Change password? Enter - no/ add - y: ')
-    if result_is_password == "y":
+    if get_bool('Change username? y/n: '):
+        new_username = input('Add new username: ')
+        (filed_username, field_password, date) = (
+            encryptV2(new_username, password))
+
+        cursor.execute(delete_row, (site,))
+        cursor.execute(create_entry_sql, (site, date,
+                                          filed_username, field_password, is_favorite))
+        print('### New username added and saved')
+
+    if get_bool('Change password? y/n: '):
         (filed_username, field_password, date) = encryptV2(username, generate_password(20))
 
         cursor.execute(delete_row, (site,))
-        cursor.execute(create_entry_sql, (site, date, filed_username, field_password, is_favorite))
-        conn.commit()
-        print('New password generated and saved')
+        cursor.execute(create_entry_sql, (site, date, filed_username,
+                                          field_password, is_favorite))
+        print('### New password generated and saved')
 
-    # TODO Add data(salt)
-    # Edit is_favorite
-    result_is_favorite = input('Add to favorites? Enter - no/ add - y: ')
-    if result_is_favorite == "y":
-        cursor.execute('UPDATE vault SET is_favorite = TRUE WHERE site = ?', (site,))
-        conn.commit()
+    if input('Add to favorites? y/n: ') == "y":
+        cursor.execute(update_favorites, (site,))
+        print('### Entry added to favorites')
 
     conn.close()
 
 
 def delete_entry():
-    site = input('Search url to edit entry: ')
+    if is_vault_empty():
+        return
+
+    site = input('Search url to delete entry: ')
     conn = sqlite3.connect(vault_file)
     cursor = conn.cursor()
-    cursor.execute(delete_row, (site,))
-    conn.commit()
-    conn.close()
-    print(site + 'has deleted!')
+    cursor.execute(search_site, (site,))
+    entry = cursor.fetchone()
+
+    if entry:
+        if get_bool('Delete ' + site + '? y/n: '):
+            cursor.execute(delete_row, (site,))
+            conn.close()
+        print(site + ' entry deleted!')
+    else:
+        print('There is no entry with name: ' + site)
+        return
+
+
+def close_vault():
+    sys.exit()
