@@ -9,6 +9,8 @@ select_username = 'SELECT username FROM vault WHERE site LIKE ?'
 select_is_favorite = 'SELECT is_favorite FROM vault WHERE site = ?'
 select_date = 'SELECT date FROM vault WHERE site = ?'
 delete_row = 'DELETE FROM vault WHERE site = ?'
+select_all = 'SELECT * FROM vault'
+update_favorites = 'UPDATE vault SET is_favorite = TRUE WHERE site = ?'
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 passowrd_file = ROOT_DIR + '\\vault.pswd'
