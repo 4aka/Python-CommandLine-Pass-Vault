@@ -1,25 +1,12 @@
-from VaultFeatures import search, create_entry, show_favorite, edit_entry, delete_entry
+from VaultFeatures import search, create_entry, show_favorite, edit_entry, delete_entry, close_vault
 from Vault import login
-import sys
-from GeneratePassword import generate_password
 
-'''
-    TODO
-    
-    Безпека ключа: Найважливіше – безпечно зберігати ключ AES. Не зберігайте його в коді або в тому ж файлі, 
-    що й паролі. Розгляньте можливість використання ключа, який вводить користувач, або зашифруйте ключ іншим ключем.
-
-    Salt: Використовуйте salt для захисту від атак за допомогою райдужних таблиць. Salt – це випадковий рядок, 
-    який додається до пароля перед хешуванням.
-
-    Key Derivation Function (KDF): Використовуйте KDF, таку як PBKDF2 або Argon2, 
-    для отримання ключа AES з пароля користувача. Це робить атаку грубою силою більш складною.
-
-    Обробка помилок: Додайте обробку помилок для обробки випадків, 
-    коли файл не знайдено, ключ недійсний або виникають інші проблеми.
-
-    Тестування: Ретельно протестуйте свій менеджер паролів, щоб переконатися, що він безпечний і надійний.
-'''
+__author__ = "Arch Incorp"
+__copyright__ = "Copyright 2025, The Vault Project"
+__credits__ = "Arch Incorp"
+__maintainer__ = "Arch Incorp"
+__email__ = "7nuclear@gmail.com"
+__status__ = "Testing"
 
 
 def main():
@@ -28,7 +15,7 @@ def main():
 
 
 def menu():
-    print('''Wellcome to your VAULT!''')
+    print('''Wellcome to your VAULT!\n''')
     action = None
 
     while action != "z":
@@ -37,8 +24,8 @@ def menu():
         c - create
         f - favorites
         e - edit
-        z - exit
         d - delete
+        z - exit
         ''')
         match action:
             case "s":
@@ -52,7 +39,7 @@ def menu():
             case "d":
                 delete_entry()
         if action == "z":
-            sys.exit()
+            close_vault()
 
 
 # Run main
