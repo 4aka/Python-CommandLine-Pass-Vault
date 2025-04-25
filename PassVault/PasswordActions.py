@@ -1,5 +1,4 @@
-import base64
-from HashData import hash_data
+from Tools import hash_data
 from Variables import passowrd_file
 
 
@@ -11,8 +10,7 @@ def create_password(password):
 
 
 def compare_password_with_existed(password):
-    existed_password = read_password()
-    return existed_password == password
+    return read_password() == password
 
 
 def read_password():
@@ -27,8 +25,3 @@ def read_password_bytes():
     password = f.read()
     f.close()
     return password
-
-
-def input_data(input_text):
-    return input(input_text)
-
