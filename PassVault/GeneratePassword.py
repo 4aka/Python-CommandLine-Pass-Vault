@@ -21,6 +21,7 @@ def is_pass_contains_all_important_parts(password):
     is_upper = False
     is_digit = False
     is_spec = False
+
     for char in password:
         if char.islower():
             is_lower = True
@@ -30,6 +31,7 @@ def is_pass_contains_all_important_parts(password):
             is_digit = True
         if ord(char) in spec_symbols():
             is_spec = True
+
     return is_lower and is_upper and is_digit and is_spec
 
 
