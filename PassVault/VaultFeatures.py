@@ -2,7 +2,8 @@ import sqlite3
 import sys
 
 from Assertions import is_site_name_unique, is_username_empty, is_vault_empty
-from Variables import (vault_file, show_favorites_sql, create_entry_sql, search_site, select_is_favorite, delete_row, update_favorites)
+from Variables import (vault_file, show_favorites_sql, create_entry_sql, search_site,
+                       select_is_favorite, delete_row, update_favorites)
 from Tools import get_bool, copy_to_clipboard
 from GeneratePassword import generate_password
 from Security import encryptV2, decryptV2, get_date
@@ -19,6 +20,7 @@ def search():
 
     # Get password
     cursor.execute(search_site, (site,))
+    conn.commit()
     entry = cursor.fetchone()
     conn.close()
 
@@ -50,8 +52,8 @@ def create_entry():
     # Add to db
     conn = sqlite3.connect(vault_file)
     cursor = conn.cursor()
-    cursor.execute(create_entry_sql, (site, date, filed_username,
-                                      field_password, is_favorite))
+    cursor.execute(create_entry_sql, (site, date, filed_username, field_password, is_favorite))
+    conn.commit()
     conn.close()
 
 
@@ -60,8 +62,10 @@ def show_favorite():
         return
 
     conn = sqlite3.connect(vault_file)
+    conn.commit()
     cursor = conn.cursor()
     cursor.execute(show_favorites_sql)
+    conn.commit()
     entry = cursor.fetchall()
     conn.close()
 
@@ -98,20 +102,25 @@ def edit_entry():
             encryptV2(new_username, password))
 
         cursor.execute(delete_row, (site,))
+        conn.commit()
         cursor.execute(create_entry_sql, (site, date,
                                           filed_username, field_password, is_favorite))
+        conn.commit()
         print('### New username added and saved')
 
     if get_bool('Change password? y/n: '):
         (filed_username, field_password, date) = encryptV2(username, generate_password(20))
 
         cursor.execute(delete_row, (site,))
+        conn.commit()
         cursor.execute(create_entry_sql, (site, date, filed_username,
                                           field_password, is_favorite))
+        conn.commit()
         print('### New password generated and saved')
 
     if input('Add to favorites? y/n: ') == "y":
         cursor.execute(update_favorites, (site,))
+        conn.commit()
         print('### Entry added to favorites')
 
     conn.close()
@@ -130,6 +139,7 @@ def delete_entry():
     if entry:
         if get_bool('Delete ' + site + '? y/n: '):
             cursor.execute(delete_row, (site,))
+            conn.commit()
             conn.close()
         print(site + ' entry deleted!')
     else:
