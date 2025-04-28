@@ -46,7 +46,7 @@ def is_site_name_unique():
     return site
 
 
-def get_user_name():
+def is_username_empty():
     username = input('Username: ')
     while username == '':
         username = input('Username should be a string! Try again: ')
@@ -76,9 +76,12 @@ def assert_input(prompt):
     data = input(prompt)
     input_data = regex.search(r'\p{IsCyrillic}', data)
 
-    while input_data is not None:
-        print('Wrong locale. Only English allowed!')
-        data = input(prompt)
-        input_data = regex.search(r'\p{IsCyrillic}', data)
-        if input_data is None:
-            return data
+    if input_data is not None:
+        while input_data is not None:
+            print('Wrong locale. Only English allowed!')
+            data = input(prompt)
+            input_data = regex.search(r'\p{IsCyrillic}', data)
+            if input_data is None:
+                return data
+    else:
+        return data
