@@ -1,7 +1,7 @@
 import sqlite3
 import sys
 
-from Assertions import is_site_name_unique, get_user_name, is_vault_empty
+from Assertions import is_site_name_unique, is_username_empty, is_vault_empty
 from Variables import (vault_file, show_favorites_sql, create_entry_sql, search_site, select_is_favorite, delete_row, update_favorites)
 from Tools import get_bool, copy_to_clipboard
 from GeneratePassword import generate_password
@@ -36,7 +36,7 @@ def search():
 def create_entry():
     # Collect data
     site = is_site_name_unique()
-    username = get_user_name()
+    username = is_username_empty()
     is_favorite = get_bool('Add to favorite? y/n: ')
 
     if get_bool('Generate password? y/n: '):
