@@ -48,11 +48,14 @@ def is_site_name_unique():
 
 def is_username_empty():
     username = input('Username: ')
-    while username == '':
-        username = input('Username should be a string! Try again: ')
-        if username != '':
-            break
-    return username
+
+    if username == '':
+        while username == '':
+            username = input('Username should be a string! Try again: ')
+            if username != '':
+                break
+    else:
+        return username
 
 
 def passwords_equels(password_1, password_2):
