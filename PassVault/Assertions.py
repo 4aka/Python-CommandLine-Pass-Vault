@@ -1,4 +1,7 @@
 import sqlite3
+
+import regex
+
 from Variables import passowrd_file, vault_file_path, vault_file, search_site, select_all
 
 
@@ -68,3 +71,14 @@ def is_vault_empty():
     else:
         return False
 
+
+def assert_input(prompt):
+    data = input(prompt)
+    input_data = regex.search(r'\p{IsCyrillic}', data)
+
+    while input_data is not None:
+        print('Wrong locale. Only English allowed!')
+        data = input(prompt)
+        input_data = regex.search(r'\p{IsCyrillic}', data)
+        if input_data is None:
+            return data
