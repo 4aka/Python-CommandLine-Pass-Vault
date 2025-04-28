@@ -3,3 +3,4 @@ PBKDF2HMAC
 pyperclip
 sqlite3
 hashlib
+regex
