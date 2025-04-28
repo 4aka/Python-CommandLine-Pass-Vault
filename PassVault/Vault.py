@@ -17,13 +17,16 @@ def new_user_scenario():
     password = assert_input('\nCreate password: ')
     assert_password = assert_input('Confirm password: ')
 
-    while not passwords_equels(password, assert_password):
-        print('Passwords do not match! Try again')
-        password = assert_input('\nCreate password: ')
-        assert_password = assert_input('Confirm password: ')
-
-    create_password(password)
-    create_vault()
+    if not passwords_equels(password, assert_password):
+        while not passwords_equels(password, assert_password):
+            print('Passwords do not match! Try again')
+            password = assert_input('\nCreate password: ')
+            assert_password = assert_input('Confirm password: ')
+            if passwords_equels(password, assert_password):
+                break
+    else:
+        create_password(password)
+        create_vault()
 
 
 def existed_user_scenario():
