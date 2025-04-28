@@ -1,7 +1,7 @@
 from Assertions import is_password_file_exists, is_vault_file_exists
-from Tools import get_bool, hash_data, input_data
+from Tools import get_bool, hash_data
 from PasswordActions import compare_password_with_existed, create_password
-from Assertions import passwords_equels
+from Assertions import passwords_equels, assert_input
 from Variables import vault_file, create_table_sql
 import sqlite3
 
@@ -14,25 +14,24 @@ def login():
 
 
 def new_user_scenario():
-    password = input_data('\nCreate password: ')
-    assert_password = input_data('Confirm password: ')
+    password = assert_input('\nCreate password: ')
+    assert_password = assert_input('Confirm password: ')
+
     while not passwords_equels(password, assert_password):
         print('Passwords do not match! Try again')
-        password = input_data('New password: ')
-        assert_password = input_data('New password again: ')
+        password = assert_input('\nCreate password: ')
+        assert_password = assert_input('Confirm password: ')
 
-    # TODO check input for cirylyc
     create_password(password)
     create_vault()
 
 
 def existed_user_scenario():
-    password = input('\nPassword: ')
+    password = assert_input('\nPassword: ')
 
-    # password has to be hashed
     while not compare_password_with_existed(hash_data(password)):
         print('Wrong password! Try again')
-        password = input('Password: ')
+        password = assert_input('\nPassword: ')
     if not is_vault_file_exists():
         ans = get_bool('Create new vault? ')
         if ans:
